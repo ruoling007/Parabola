@@ -7,9 +7,17 @@
  * @param {Function} callback 运动后执行的回调函数，this指向该对象
  * @param {Function} stepCallback 运动过程中执行的回调函数，this指向该对象，接受x，y参数，分别表示X，Y轴的偏移位置
  * @param {Boolean} autostart 是否自动开始运动，默认为false
- * @return {Undefined}
+ * @return {undefined}
  */
 class Parabola {
+  #el = null;
+  #target = null;
+  #duration = 500;
+  #movement = "cubic-bezier(0.49, -0.29, 0.75, 0.41)";
+  #callback = null;
+  #stepCallback = null;
+  #autostart = false;
+  #initialization;
   constructor({
     el,
     target,
@@ -19,45 +27,53 @@ class Parabola {
     stepCallback,
     autostart,
   }) {
-    this.el = el || null;
-    this.target = target || null;
-    this.duration = duration || 500;
-    this.movement = movement || "cubic-bezier(0.49, -0.29, 0.75, 0.41)";
-    this.callback = callback || function () {};
-    this.stepCallback = stepCallback || function (x, y) {};
-    this.autostart = autostart || false;
-    if (this.autostart) this.start();
+    this.#el = el;
+    this.#target = target;
+    this.#duration = duration;
+    this.#movement = movement;
+    this.#callback = callback;
+    this.#stepCallback = stepCallback;
+    this.#autostart = autostart;
+    if (this.#autostart) this.start();
   }
   // 运动函数，开始执行动画
   start() {
-    if (!this.el || !this.target) return;
+    if (!this.#el || !this.#target) return;
     // 获取起点元素的位置
-    let { left: elX, top: elY } = this.el.getBoundingClientRect();
+    let { left: elX, top: elY } = this.#el.getBoundingClientRect();
     // 获取目标元素的位置
-    let { left: targetX, top: targetY } = this.target.getBoundingClientRect();
+    let { left: targetX, top: targetY } = this.#target.getBoundingClientRect();
     // 计算起点元素的偏移位置
     let offset = [targetX - elX, targetY - elY];
     if (elX) offset[0] = targetX;
     if (elY) offset[1] = targetY;
     // 记录起点元素的初始位置,只会记录第一次
-    if (!this.initialization) this.initialization = [elX, elY];
+    if (!this.#initialization) this.#initialization = [elX, elY];
     // 小球运动
-    this.el.style.cssText = `top:${offset[1]}px;left:${offset[0]}px;transition: left ${this.duration}ms linear,top ${this.duration}ms ${this.movement};`;
+    this.#el.style.cssText = `top:${offset[1]}px;left:${
+      offset[0]
+    }px;transition: left ${this.#duration}ms linear,top ${this.#duration}ms ${
+      this.#movement
+    };`;
     // 监听起点元素运动
-    this.el.addEventListener(
-      "transitionrun",
-      this.stepCallback.call(this, offset[0], offset[1])
-    );
+    typeof this.#stepCallback === "function" &&
+      this.#el.addEventListener(
+        "transitionrun",
+        this.#stepCallback.call(this, offset[0], offset[1])
+      );
     // 监听起点元素运动结束
-    this.el.addEventListener("transitionend", this.callback.call(this));
+    typeof this.#callback === "function" &&
+      this.#el.addEventListener("transitionend", this.#callback.call(this));
   }
   // 重置函数,重置元素的位置
   reset() {
-    this.el.style.cssText = `top:${this.initialization[1]}px;left:${this.initialization[0]}px`;
+    this.#el.style.cssText = `top:${this.#initialization[1]}px;left:${
+      this.#initialization[0]
+    }px`;
   }
   // 停止函数,停止动画
   stop() {
-    let { left, top } = this.el.getBoundingClientRect();
-    this.el.style.cssText = `top:${top}px;left:${left}px;`;
+    let { left, top } = this.#el.getBoundingClientRect();
+    this.#el.style.cssText = `top:${top}px;left:${left}px;`;
   }
 }
