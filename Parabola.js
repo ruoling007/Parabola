@@ -3,11 +3,11 @@
  * @param {HTMLElement} el 起点元素 传入一个html元素
  * @param {HTMLElement} target 目标元素 传入一个html元素
  * @param {Number} duration 运动的时间，默认500毫秒
- * @param {Function} movement 运动的函数，默认的函数为贝塞尔曲线函数cubic-bezier(0.49, -0.29, 0.75, 0.41)
+ * @param {String} movement 运动的函数，默认的函数为贝塞尔曲线函数cubic-bezier(0.49, -0.29, 0.75, 0.41)
  * @param {Function} callback 运动后执行的回调函数，this指向该对象
  * @param {Function} stepCallback 运动过程中执行的回调函数，this指向该对象，接受x，y参数，分别表示X，Y轴的偏移位置
  * @param {Boolean} autostart 是否自动开始运动，默认为false
- * @return {*}
+ * @return {Undefined}
  */
 class Parabola {
   constructor({
@@ -19,25 +19,18 @@ class Parabola {
     stepCallback,
     autostart,
   }) {
-    // 起点元素
-    this.el = el;
-    // 目标元素
-    this.target = target;
-    // 运动时间
+    this.el = el || null;
+    this.target = target || null;
     this.duration = duration || 500;
-    // 运动函数
     this.movement = movement || "cubic-bezier(0.49, -0.29, 0.75, 0.41)";
-    // 运动后执行的回调函数
     this.callback = callback || function () {};
-    // 运动过程中执行的回调函数
     this.stepCallback = stepCallback || function (x, y) {};
-    // 是否自动开始运动
     this.autostart = autostart || false;
-    // 判断起点元素是否自动运动
     if (this.autostart) this.start();
   }
   // 运动函数，开始执行动画
   start() {
+    if (!this.el || !this.target) return;
     // 获取起点元素的位置
     let { left: elX, top: elY } = this.el.getBoundingClientRect();
     // 获取目标元素的位置
