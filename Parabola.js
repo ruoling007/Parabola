@@ -10,13 +10,13 @@
  * @return {undefined}
  */
 class Parabola {
-  #el = null;
-  #target = null;
-  #duration = 500;
-  #movement = "cubic-bezier(0.49, -0.29, 0.75, 0.41)";
-  #callback = null;
-  #stepCallback = null;
-  #autostart = false;
+  #el;
+  #target;
+  #duration;
+  #movement;
+  #callback;
+  #stepCallback;
+  #autostart;
   #initialization;
   constructor({
     el,
@@ -27,13 +27,13 @@ class Parabola {
     stepCallback,
     autostart,
   }) {
-    this.#el = el;
-    this.#target = target;
-    this.#duration = duration;
-    this.#movement = movement;
-    this.#callback = callback;
-    this.#stepCallback = stepCallback;
-    this.#autostart = autostart;
+    this.#el = el || null;
+    this.#target = target || null;
+    this.#duration = duration || 500;
+    this.#movement = movement || "cubic-bezier(0.49, -0.29, 0.75, 0.41)";
+    this.#callback = callback || null;
+    this.#stepCallback = stepCallback || null;
+    this.#autostart = autostart || false;
     if (this.#autostart) this.start();
   }
   // 运动函数，开始执行动画
@@ -52,7 +52,7 @@ class Parabola {
     // 小球运动
     this.#el.style.cssText = `top:${offset[1]}px;left:${
       offset[0]
-    }px;transition: left ${this.#duration}ms linear,top ${this.#duration}ms ${
+    }px;transition:left ${this.#duration}ms linear,top ${this.#duration}ms ${
       this.#movement
     };`;
     // 监听起点元素运动
