@@ -27,14 +27,14 @@ class Parabola {
     stepCallback,
     autostart,
   }) {
-    this.#el = el || null;
-    this.#target = target || null;
-    this.#duration = duration || 500;
-    this.#movement = movement || "cubic-bezier(0.49, -0.29, 0.75, 0.41)";
-    this.#callback = callback || null;
-    this.#stepCallback = stepCallback || null;
-    this.#autostart = autostart || false;
-    if (this.#autostart) this.start();
+    this.#el = el ?? null;
+    this.#target = target ?? null;
+    this.#duration = duration ?? 500;
+    this.#movement = movement ?? "cubic-bezier(0.49, -0.29, 0.75, 0.41)";
+    this.#callback = callback ?? null;
+    this.#stepCallback = stepCallback ?? null;
+    this.#autostart = autostart ?? false;
+    this.#autostart && this.start();
   }
   // 运动函数，开始执行动画
   start() {
