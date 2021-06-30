@@ -9,7 +9,7 @@
  * @param {Boolean} autostart 是否自动开始运动，默认为false
  * @return {undefined}
  */
-class Parabola {
+export default class Parabola {
   #el;
   #target;
   #duration;
